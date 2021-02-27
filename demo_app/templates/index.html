@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <form id="test_form">
+    <button type="submit" id="button" name="submit">Submit test</button>
+  </form>
+  <div class="container-fluid" style="border:1px solid #cecece;">
+  <form method="POST" id="b1form" >{% csrf_token %}
+    {{b_form}}<br>
+    <button type="submit" name="submit">Submit</button>
+  </form>
+    <div id="b-model">
+      {%for model_b in model_b_set%}
+        <p>A1 {{ model_b.A1}},B1 {{ model_b.B1}}</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="container-fluid" style="border:1px solid #cecece;">
+  {{c_form}}
+  </div>
+{% endblock %}
+{% block JavaScript %}
+<script type="text/javascript">
+// $("#test-form").submit(function (e) {
+//   e.preventDefault();
+//   console.log("Test OK") }
+  $(document).on('submit', '#b1form',function(e){
+        e.preventDefault();
+        // console.log("test");
+
+      // }
+    $.ajax({
+        type:'POST',
+        url:'{% url "model_b-list" %}',
+        data:{
+            A1:$('#id_A1').val(),
+            B1:$('#id_B1').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success:function(json){
+          console.log(json);
+        },
+        error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+    });
+// });
+</script>
+{% endblock %}

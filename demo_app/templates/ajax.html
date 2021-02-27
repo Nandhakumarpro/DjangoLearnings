@@ -1,0 +1,115 @@
+{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Demo Project</title>
+</head>
+<body class="bg-light">
+<div class="container pt-4">
+
+    <div class="container-fluid" style="border:1px solid #cecece;">
+      Model B
+    <form method="POST" id="b1form" >{% csrf_token %}
+      {{b_form}}
+      <button type="submit" name="submit"> + </button>
+    </form>
+      <div id="b-model">
+        {%for model_b in model_b_set%}
+          <p>A1 {{ model_b.A1}},B1 {{ model_b.B1}},C1 {{ model_b.C1}},D1 {{ model_b.D1}}</p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="container-fluid" style="border:1px solid #cecece;">
+      Model C
+    <form method="POST" id="c1form" >{% csrf_token %}
+    {{c_form}}
+    <button type="submit" name="submit"> + </button>
+    </form>
+      <div id="c-model">
+        {%for model_c in model_c_set%}
+          <p>A1 {{ model_c.A1}},B1 {{ model_c.B1}},C1 {{ model_c.C1}},D1 {{ model_c.D1}}</p>
+        {% endfor %}
+      </div>
+    </div>
+</div>
+<script
+        src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script>
+    const form = document.getElementById('b1form');
+    form.addEventListener("submit", submitHandler);
+
+    function submitHandler(e) {
+        e.preventDefault();
+        $.ajax({
+            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url         : '{% url "model_b-list" %}', // the url where we want to POST
+            data:{
+                A1:$('#id_A1').val(),
+                B1:$('#id_B1').val(),
+                C1:$('#id_C1').val(),
+                D1:$('#id_D1').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post'
+            }, // our form data
+            dataType    : 'json', // what type of data do we expect back from the server
+            success     : function(json){
+              p1 = document.createElement("p")
+              p1.textContent = "A1 "+json.A1+" B1 "+json.B1 +"C1 "+json.C1+" B1 "+json.D1 ;
+              document.getElementById("b-model").appendChild(p1);
+              $('#id_A1').val('');
+              $('#id_B1').val('');
+              $('#id_C1').val('');
+              $('#id_D1').val('');
+            }
+        });
+    }
+
+</script>
+<script>
+    const form2 = document.getElementById('c1form');
+    form2.addEventListener("submit", MysubmitHandler);
+
+    function MysubmitHandler(e) {
+        e.preventDefault();
+        $.ajax({
+            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url         : '{% url "model_c-list" %}', // the url where we want to POST
+            data:{
+                A1:$('#test_A1').val(),
+                B1:$('#test_B1').val(),
+                C1:$('#test_C1').val(),
+                D1:$('#test_D1').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post'
+            }, // our form data
+            dataType    : 'json', // what type of data do we expect back from the server
+            success     : function(json){
+              p1 = document.createElement("p")
+              p1.textContent = "A1 "+json.A1+" B1 "+json.B1 +"C1 "+json.C1+" B1 "+json.D1 ;
+              document.getElementById("c-model").appendChild(p1);
+              $('#test_A1').val('');
+              $('#test_B1').val('');
+              $('#test_C1').val('');
+              $('#test_D1').val('');
+            }
+        });
+    }
+</script>
+</body>
+</html>
