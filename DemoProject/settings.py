@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'demo_app',
     "rest_framework",
     'crispy_forms',
+     'multiselectfield',
 ]
 
 MIDDLEWARE = [

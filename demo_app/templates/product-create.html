@@ -1,0 +1,121 @@
+{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Demo Project</title>
+</head>
+<body class="bg-light">
+<div class="container pt-4">
+
+    <form method="post">{% csrf_token %}
+      <div class="container-fluid" style="border:1px solid #cecece;">
+        {{ prod_form }}
+      </div>
+      <div class="container-fluid" style="border:1px solid #cecece;">
+        {{a_form}}
+      </div>
+      <button type="submit" name="submit">Save Product</button>
+    </form>
+      <div class="container-fluid" style="border:1px solid #cecece;" id="b-model">
+        <form method="post" id="b_form">{% csrf_token %}
+          {{b_form}}
+          <button type="submit" name="submit"> + </button>
+        </form>
+
+      </div>
+      <div class="container-fluid" style="border:1px solid #cecece;" id="c-model">
+        <form method="post" id="c_form">{% csrf_token %}
+          {{c_form}}
+          <button type="submit" name="submit"> + </button>
+        </form>
+      </div>
+
+  </div>
+  <script
+          src="https://code.jquery.com/jquery-3.5.0.min.js"
+          integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+          crossorigin="anonymous"></script>
+  <script>
+      const form = document.getElementById('b_form');
+      form.addEventListener("submit", submitHandler);
+
+      function submitHandler(e) {
+          e.preventDefault();
+          $.ajax({
+              type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+              url         : '{% url "model_b-list" %}', // the url where we want to POST
+              data:{
+                  variableB1:$('#bform_variableB1').val(),
+                  variableB2:$('#bform_variableB2').val(),
+                  variableB3:$('#bform_variableB3').val(),
+                  variableB4:$('#bform_variableB4').val(),
+                  variableB5:$('#bform_variableB5').val(),
+                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                  action: 'post'
+              }, // our form data
+              dataType    : 'json', // what type of data do we expect back from the server
+              success     : function(json){
+                p1 = document.createElement("p")
+                console.log(json);
+                p1.textContent = json.variableB1+"  "+json.variableB2 +"  "+json.variableB3+"  "+json.variableB4+" "+ json.variableB5;
+                document.getElementById("b-model").appendChild(p1);
+                $('#bform_variableB1').val('');
+                $('#bform_variableB2').val('');
+                $('#bform_variableB3').val('');
+                $('#bform_variableB4').val('');
+                $('#bform_variableB5').val('');
+              }
+          });
+      }
+
+  </script>
+  <script>
+      const Myform = document.getElementById('c_form');
+      Myform.addEventListener("submit", MysubmitHandler);
+
+      function MysubmitHandler(e) {
+          e.preventDefault();
+          $.ajax({
+              type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+              url         : '{% url "model_c-list" %}', // the url where we want to POST
+              data:{
+                  variableC1:$('#cform_variableC1').val(),
+                  variableC2:$('#cform_variableC2').val(),
+                  variableC3:$('#cform_variableC3').val(),
+                  variableC4:$('#cform_variableC4').val(),
+                  variableC5:$('#cform_variableC5').val(),
+                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                  action: 'post'
+              }, // our form data
+              dataType    : 'json', // what type of data do we expect back from the server
+              success     : function(json){
+                p1 = document.createElement("p")
+                console.log(json);
+                p1.textContent = json.variableC1+"  "+json.variableC2 +"  "+json.variableC3+"  "+json.variableC4+" "+ json.variableC5;
+                document.getElementById("c-model").appendChild(p1);
+                $('#cform_variableC1').val('');
+                $('#cform_variableC2').val('');
+                $('#cform_variableC3').val('');
+                $('#cform_variableC4').val('');
+                $('#cform_variableC5').val('');
+              }
+          });
+      }
+
+  </script>
+</body>
+</html>
